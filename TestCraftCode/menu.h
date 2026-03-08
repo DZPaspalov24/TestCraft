@@ -7,4 +7,11 @@ void page1();
 void page2();
 void page3();
 
+void cellTest();
+void organismsTest();
+void plantsTest();
+void animalsTest();
+void humanTest();
+void geneticsTest();
+
 #endif

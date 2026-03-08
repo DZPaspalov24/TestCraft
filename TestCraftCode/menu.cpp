@@ -7,6 +7,7 @@ using namespace std;
 
 int showMenu() {
 	int choice;
+
 	cout << "-----------------------------------------------------------------------------" << endl;
 	cout << "                           TEST CRAFT-BIOLOGY TESTS                          " << endl;
 	cout << "-----------------------------------------------------------------------------" << endl;
@@ -26,17 +27,56 @@ int showMenu() {
 
 void page1() {
 	system("cls");
-	int back;
-	cout << "Take a Test page." << endl;
-	cout << "Press 1 to go back: ";
-	cin >> back;
+	int choice;
+
+	cout << "-----------------------------------------------------------------------------" << endl;
+	cout << "                                  TEST CRAFT                                 " << endl;
+	cout << "-----------------------------------------------------------------------------" << endl;
+	cout << " " << endl;
+	cout << " " << endl;
+	cout << " " << endl;
+	cout << "Topic 1: Cell - Structure and Functions" << endl;
+	cout << "Topic 2: Unicellular and Multicellular Organisms" << endl;
+	cout << "Topic 3: Plants" << endl;
+	cout << "Topic 4: Animals" << endl;
+	cout << "Topic 5: Humans as a Biological Species" << endl;
+	cout << "Topic 6: Heredity and Variation" << endl;
+	cout << "7: Return to the main menu" << endl;
+	cout << endl;
+	cout << "Which topic would you like to take a test on:  ";
+	cin >> choice;
+
+	switch (choice) {
+	case 1:
+		cellTest();
+		break;
+	case 2:
+		organismsTest();
+		break;
+	case 3:
+		plantsTest();
+		break;
+	case 4:
+		animalsTest();
+		break;
+	case 5:
+		humanTest();
+		break;
+	case 6:
+		geneticsTest();
+		break;
+	case 7:
+		return;
+
+     }
 }
 
 void page2() {
 	system("cls");
 	int back;
+
 	cout << "-----------------------------------------------------------------------------" << endl;
-	cout << "                           TEST CRAFT-HOW TO USE                             " << endl;
+	cout << "                           HOW TO USE-TEST CRAFT                             " << endl;
 	cout << "-----------------------------------------------------------------------------" << endl;
 	cout << " " << endl;
 	cout << " " << endl;
@@ -51,12 +91,32 @@ void page2() {
 	cout << " " << endl;
 	cout << "Press 1 to go back to the main menu: ";
 	cin >> back;
+
+	while (true) {
+	if (back == 1) {
+		return;
+	}
+	else {
+		cout << "Invalid input. Chose again: ";
+		cin >> back;
+	  }
+   }
 }
 
 void page3() {
 	system("cls");
 	int back;
 	cout << "Test marks page." << endl;
-	cout << "Press 1 to go back: ";
+	cout << "Press any button to go back to the main menu: ";
 	cin >> back;
+
+	while (true) {
+		if (back == 1) {
+			return;
+		}
+		else {
+			cout << "Invalid input. Chose again: ";
+			cin >> back;
+		}
+	}
 }
