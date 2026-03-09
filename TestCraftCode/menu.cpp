@@ -12,8 +12,6 @@ int showMenu() {
 	cout << "                           TEST CRAFT-BIOLOGY TESTS                          " << endl;
 	cout << "-----------------------------------------------------------------------------" << endl;
 	cout << " " << endl;
-	cout << " " << endl;
-	cout << " " << endl;
 	cout << "1. Take a test" << endl;
 	cout << "2. How to use Test Craft" << endl;
 	cout << "3. Test marks" << endl;
@@ -32,8 +30,6 @@ void page1() {
 	cout << "-----------------------------------------------------------------------------" << endl;
 	cout << "                                  TEST CRAFT                                 " << endl;
 	cout << "-----------------------------------------------------------------------------" << endl;
-	cout << " " << endl;
-	cout << " " << endl;
 	cout << " " << endl;
 	cout << "Topic 1: Cell - Structure and Functions" << endl;
 	cout << "Topic 2: Unicellular and Multicellular Organisms" << endl;
@@ -78,8 +74,6 @@ void page2() {
 	cout << "-----------------------------------------------------------------------------" << endl;
 	cout << "                           HOW TO USE-TEST CRAFT                             " << endl;
 	cout << "-----------------------------------------------------------------------------" << endl;
-	cout << " " << endl;
-	cout << " " << endl;
 	cout << " " << endl;
 	cout << "Test Craft is an application designed to help students improve their grades in school or learn something new." << endl;
 	cout << "Within the app, users can take biology tests, complete homework assignments, and prepare for upcoming" << endl;
