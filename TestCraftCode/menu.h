@@ -14,4 +14,6 @@ void animalsTest();
 void humanTest();
 void geneticsTest();
 
+void scoresPage();
+
 #endif

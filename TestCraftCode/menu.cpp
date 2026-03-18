@@ -99,18 +99,5 @@ void page2() {
 
 void page3() {
 	system("cls");
-	int back;
-	cout << "Test marks page." << endl;
-	cout << "Press any button to go back to the main menu: ";
-	cin >> back;
-
-	while (true) {
-		if (back == 1) {
-			return;
-		}
-		else {
-			cout << "Invalid input. Chose again: ";
-			cin >> back;
-		}
-	}
+    scoresPage();
 }

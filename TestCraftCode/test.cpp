@@ -4,6 +4,7 @@
 #include <algorithm>
 #include <ctime>
 #include <random>
+#include <fstream>
 #include "menu.h"
 using namespace std;
 
@@ -13,36 +14,37 @@ struct QA {
 };
 
 void cellTest() {
+
     vector<QA> quiz = {
         {"What is the smallest unit of life?", "Cell"},
         {"Which organ pumps blood throughout the body?", "Heart"},
         {"What structure controls cell activities?", "Nucleus"},
         {"Which blood cells are responsible for fighting infections?", "White blood cells"},
         {"Which blood cells carry oxygen?", "Red blood cells"},
-		{"Which organ produces Insulin?", "Pancreas"},
+        {"Which organ produces Insulin?", "Pancreas"},
         {"What organelle stores water and nutrients?", "Vacuole"},
-		{"Which organ stores urine?", "Bladder"},
+        {"Which organ stores urine?", "Bladder"},
         {"Which organ filters toxins from the blood?", "Liver"},
         {"What is the movement of particles from high to low concentration called?", "Diffusion"},
         {"Which vessels carry blood away from the heart?", "Arteries"},
-		{"Which vessels carry blood back to the heart?", "Veins"},
+        {"Which vessels carry blood back to the heart?", "Veins"},
         {"What type of cells do not have a nucleus?", "Prokaryotes"},
         {"What is the genetic material in cells called?", "DNA"},
-		{"What connects muscles to bones?", "Tendons"},
-		{"What connects bones to other bones?", "Ligaments"},
+        {"What connects muscles to bones?", "Tendons"},
+        {"What connects bones to other bones?", "Ligaments"},
         {"What process allows plants to make food using sunlight?", "Photosynthesis"},
-		{"Which part of eyes controls the amount of light entering?", "Iris"},
-		{"Which part of eyes controls the amount of light entering?", "Pupil"},
+        {"Which part of eyes controls the amount of light entering?", "Iris"},
+        {"Which part of eyes controls the amount of light entering?", "Pupil"},
         {"What microorganism type lacks a nucleus?", "Bacteria"},
-		{"Which muscle seperates the chest from the abdomen?", "Diaphragm"},
-		{"What is the outer layer of the skin called?", "Epidermis"},
-		{"What is the largest internal organ?", "Liver"},
-		{"How many bones are in the human body?", "206"},
+        {"Which muscle separates the chest from the abdomen?", "Diaphragm"},
+        {"What is the outer layer of the skin called?", "Epidermis"},
+        {"What is the largest internal organ?", "Liver"},
+        {"How many bones are in the human body?", "206"},
         {"What structure contains DNA in eukaryotic cells?", "Nucleus"},
-		{"What is the tube that carries air to the lungs?", "Trachea"},
-		{"Which cell transmits nerve signals?", "Neuron"},
-		{"Which part of the neuron receives signals?", "Dendrites"},
-		{"Wich part of the neuron sends signals?", "Axon"},
+        {"What is the tube that carries air to the lungs?", "Trachea"},
+        {"Which cell transmits nerve signals?", "Neuron"},
+        {"Which part of the neuron receives signals?", "Dendrites"},
+        {"Which part of the neuron sends signals?", "Axon"},
         {"Which hormone is released during stress?", "Cortisol"},
     };
 
@@ -50,56 +52,97 @@ void cellTest() {
     mt19937 g(rd());
     shuffle(quiz.begin(), quiz.end(), g);
 
-    string answer;
     int score = 0;
+    string answer;
 
     for (int i = 0; i <= 20; i++) {
-        system("cls"); 
-        cout << "-----------------------------------------------------------------------------" << endl;
-        cout << "                           TEST CRAFT-BIOLOGY TESTS                          " << endl;
-        cout << "-----------------------------------------------------------------------------" << endl;
-        cout << " " << endl;
-        cout << "Question " << i <<": " << quiz[i].question << endl;
+        system("cls");
+        cout << "-----------------------------------------------------------------------------\n";
+        cout << "                           TEST CRAFT - BIOLOGY TEST                         \n";
+        cout << "-----------------------------------------------------------------------------\n\n";
+
+        cout << "Question " << i << ": " << quiz[i].question << endl;
         cout << "Answer: ";
         getline(cin, answer);
 
-        if (answer == quiz[i].answer) {
+        if (answer == quiz[i].answer)
             score += 5;
-        }
     }
 
-    string grade;
-    int back = 0;
-    if (score <= 40) {
-        grade = "Fail, 2.";
-    }
-    else if (score >= 41 && score <= 55) {
-        grade = "Below Average, 3.";
-    }
-    else if (score >= 56 && score <= 70) {
-        grade = "Average, 4.";
-    }
-    else if (score >= 71 && score <= 85) {
-        grade = "Good, 5.";
-    }
-    else {
-        grade = "Excellent, 6.";
-    }
+    int gradeNum;
+    string gradeText;
+
+    if (score <= 40) { gradeNum = 2; gradeText = "Fail, 2."; }
+    else if (score <= 55) { gradeNum = 3; gradeText = "Below Average, 3."; }
+    else if (score <= 70) { gradeNum = 4; gradeText = "Average, 4."; }
+    else if (score <= 85) { gradeNum = 5; gradeText = "Good, 5."; }
+    else { gradeNum = 6; gradeText = "Excellent, 6."; }
+
     system("cls");
     cout << "Your score: " << score << endl;
-    cout << "Your grade is: " << grade << endl;
-    cout << endl;
-    cout << "Press 1 to go to the main menu: ";
-    cin >> back;
-   
-   while (true) {
-        if (back == 1) {
-            return;
+    cout << "Your grade: " << gradeText << endl << endl;
+
+    string name;
+    int takenBefore;
+
+    cout << "Have you taken a test before?\n1 - Yes\n2 - No\nChoice: ";
+    cin >> takenBefore;
+    cin.ignore();
+
+    if (takenBefore == 1) {
+        ifstream file("scores.txt");
+        vector<string> names;
+        string fileName, test;
+        int fileScore, fileGrade;
+
+        while (file >> fileName >> test >> fileScore >> fileGrade) {
+            if (find(names.begin(), names.end(), fileName) == names.end())
+                names.push_back(fileName);
+        }
+        file.close();
+
+        if (names.empty()) {
+            cout << "No previous players found.\nEnter your name: ";
+            getline(cin, name);
         }
         else {
-            cout << "Invalid input. Chose again: ";
-            cin >> back;
+            cout << "\nSelect your name:\n";
+            for (int i = 0; i < names.size(); i++)
+                cout << i + 1 << " - " << names[i] << endl;
+
+            int choice;
+            cout << "Choice: ";
+            cin >> choice;
+            cin.ignore();
+
+            name = names[choice - 1];
         }
+
+        cout << "Welcome back, " << name << "!\n";
+    }
+    else {
+        cout << "Enter your new name: ";
+        getline(cin, name);
+        cout << "New player created: " << name << endl;
+    }
+
+    ofstream out("scores.txt", ios::app);
+    out << name << " CellTest " << score << " " << gradeNum << endl;
+    out.close();
+
+    cout << "Saving: " << name << " CellTest " << score << " " << gradeNum << endl;
+
+    out << name << " CellTest " << score << " " << gradeNum << endl;
+    out.close();
+
+    cout << "Score saved!\n\n";
+
+    int back;
+    cout << "Press 1 to return to menu: ";
+    cin >> back;
+    while (back != 1) {
+        cout << "Invalid. Try again: ";
+        cin >> back;
     }
 }
 

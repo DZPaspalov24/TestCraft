@@ -129,6 +129,7 @@
   <ItemGroup>
     <ClCompile Include="menu.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="scores.cpp" />
     <ClCompile Include="test.cpp" />
   </ItemGroup>
   <ItemGroup>
