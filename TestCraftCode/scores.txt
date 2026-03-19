@@ -1,5 +1,7 @@
-denis CellTest 5 2
-denis2 CellTest 0 2Petar CellTest 0 2
-denis Cell test 0 2
-az Cell test 0 2
-denis Genetics test 0 2
+petar Cell test 0 2
+petar Organisms test 0 2
+ivan Plants test 0 2
+anton Animals test 0 2
+stoyan Human test 0 2
+martin Genetics test 0 2
+yanko Plants test 0 2

@@ -28,10 +28,10 @@ void scoresPage() {
     }
 
     map<string, vector<TestRecord>> players;
-    string name, test;
+    string name, test, test2;
     int score, grade;
 
-    while (file >> name >> test >> score >> grade) {
+    while (file >> name >> test >> test2 >> score >> grade) {
         players[name].push_back({ test, score, grade });
     }
     file.close();

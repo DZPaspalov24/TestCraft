@@ -13,6 +13,137 @@ struct QA {
     string answer;
 };
 
+int runQuiz(vector<QA>& quiz) {
+    random_device rd;
+    mt19937 g(rd());
+    shuffle(quiz.begin(), quiz.end(), g);
+
+    int score = 0;
+    string answer;
+
+    for (int i = 0; i <= 20; i++) {
+        system("cls");
+        cout << "-----------------------------------------------------------------------------" << endl;
+        cout << "                           TEST CRAFT - BIOLOGY TEST                         " << endl;
+        cout << "-----------------------------------------------------------------------------" << endl;
+        cout << endl;
+
+        cout << "Question " << i << ": " << quiz[i].question << endl;
+        cout << "Answer: ";
+        getline(cin, answer);
+
+        if (answer == quiz[i].answer)
+            score += 5;
+    }
+
+    return score;
+}
+
+void printGrade(int score) {
+    int gradeNum;
+    string gradeText;
+
+    if (score <= 40) { gradeNum = 2; gradeText = "Fail, 2."; }
+    else if (score <= 55) { gradeNum = 3; gradeText = "Below Average, 3."; }
+    else if (score <= 70) { gradeNum = 4; gradeText = "Average, 4."; }
+    else if (score <= 85) { gradeNum = 5; gradeText = "Good, 5."; }
+    else { gradeNum = 6; gradeText = "Excellent, 6."; }
+
+    system("cls");
+    cout << "Your score: " << score << endl;
+    cout << "Your grade: " << gradeText << endl;
+}
+
+int getGradeNum(int score) {
+    if (score <= 40) return 2;
+    else if (score <= 55) return 3;
+    else if (score <= 70) return 4;
+    else if (score <= 85) return 5;
+    else return 6;
+}
+
+string getName() {
+    string name;
+    int takenBefore;
+
+    cout << "Have you taken a test before?" << endl;
+    cout << "1 - Yes" << endl;
+    cout << "2 - No" << endl;
+    cout << "Choice: ";
+    cin >> takenBefore;
+    cin.ignore();
+
+    if (takenBefore == 1) {
+        ifstream file("scores.txt");
+        vector<string> names;
+        string fileName, test;
+        int fileScore, fileGrade;
+
+        while (file >> fileName >> test >> fileScore >> fileGrade) {
+            if (find(names.begin(), names.end(), fileName) == names.end())
+                names.push_back(fileName);
+        }
+        file.close();
+
+        if (names.empty()) {
+            system("cls");
+            cout << "No previous users found." << endl;
+            cout << "Enter your name: ";
+            getline(cin, name);
+        }
+        else {
+            system("cls");
+            cout << "Select your name:" << endl;
+            for (int i = 0; i < names.size(); i++)
+                cout << i + 1 << " - " << names[i] << endl;
+
+            int choice;
+            cout << "Choice: ";
+            cin >> choice;
+            cin.ignore();
+
+            name = names[choice - 1];
+        }
+
+        cout << "Welcome back, " << name << "!" << endl;
+    }
+    else {
+        system("cls");
+        cout << "Enter your name: ";
+        getline(cin, name);
+        cout << "New student acount created: " << name << endl;
+    }
+
+    return name;
+}
+
+void saveScore(string name, string testName, int score, int gradeNum) {
+    ofstream out("scores.txt", ios::app);
+    out << name << " " << testName << " test " << score << " " << gradeNum << endl;
+    out.close();
+
+    system("cls");
+    cout << "Saving: " << name << " " << testName << " test score: " << score << " grade: " << gradeNum << endl;
+    cout << "Score saved!" << endl;
+}
+
+void returnToMenu() {
+    int back;
+    cout << "Press 1 to return to menu: ";
+    cin >> back;
+
+    while (true) {
+        if (back == 1) {
+            return;
+        }
+        else {
+            cout << "Invalid input. Chose again: ";
+            cin >> back;
+        }
+    }
+}
+
+
 void cellTest() {
 
     vector<QA> quiz = {
@@ -140,9 +271,6 @@ void cellTest() {
 
     system("cls");
     cout << "Saving: " << name << " Cell test score: " << score << " grade: " << gradeNum << endl;
-
-    out << name << " Cell test score: " << score << " grade: " << gradeNum << endl;
-    out.close();
 
     cout << "Score saved!" << endl;
 
@@ -290,9 +418,6 @@ void organismsTest() {
 
     system("cls");
     cout << "Saving: " << name << " Organisms test score: " << score << " grade: " << gradeNum << endl;
-
-    out << name << " Organisms test score: " << score << " grade: " << gradeNum << endl;
-    out.close();
 
     cout << "Score saved!" << endl;
 
@@ -444,10 +569,6 @@ void plantsTest() {
 
     system("cls");
     cout << "Saving: " << name << " Plants test score: " << score << " grade: " << gradeNum << endl;
-
-    out << name << " Plants test score: " << score << " grade: " << gradeNum << endl;
-    out.close();
-
     cout << "Score saved!" << endl;
 
     int back;
@@ -595,10 +716,6 @@ void animalsTest() {
 
     system("cls");
     cout << "Saving: " << name << " Animals test score: " << score << " grade: " << gradeNum << endl;
-
-    out << name << " Animals test score: " << score << " grade: " << gradeNum << endl;
-    out.close();
-
     cout << "Score saved!" << endl;
 
     int back;
@@ -746,10 +863,6 @@ void humanTest() {
 
     system("cls");
     cout << "Saving: " << name << " Human test score: " << score << " grade: " << gradeNum << endl;
-
-    out << name << " Human test score: " << score << " grade: " << gradeNum << endl;
-    out.close();
-
     cout << "Score saved!" << endl;
 
     int back;
@@ -840,9 +953,9 @@ void geneticsTest() {
     string name;
     int takenBefore;
 
-    cout << "Have you taken a test before?" << endl; 
+    cout << "Have you taken a test before?" << endl;
     cout << "1 - Yes" << endl;
-    cout << "2 - No" << endl; 
+    cout << "2 - No" << endl;
     cout << "Choice: ";
     cin >> takenBefore;
     cin.ignore();
@@ -891,13 +1004,9 @@ void geneticsTest() {
     ofstream out("scores.txt", ios::app);
     out << name << " Genetics test " << score << " " << gradeNum << endl;
     out.close();
-    
+
     system("cls");
     cout << "Saving: " << name << " Genetics test score: " << score << " grade: " << gradeNum << endl;
-
-    out << name << " Genetics test score: " << score << " grade: " << gradeNum << endl;
-    out.close();
-
     cout << "Score saved!" << endl;
 
     int back;
