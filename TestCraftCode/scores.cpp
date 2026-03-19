@@ -24,7 +24,7 @@ void scoresPage() {
         int back;
         cout << "\nPress 1 to return: ";
         cin >> back;
-       // return;
+        return;
     }
 
     map<string, vector<TestRecord>> players;
@@ -39,7 +39,7 @@ void scoresPage() {
 
     if (players.empty()) {
         cout << "No scores found.\n";
-        //return;
+        return;
     }
 
     // Print each player’s scores and average
@@ -72,7 +72,7 @@ void scoresPage() {
     sort(ranking.begin(), ranking.end(),
         [](auto& a, auto& b) { return a.second > b.second; });
 
-    for (int i = 0; i < ranking.size(); i++) {
+    for (int i = 0; i < (int)ranking.size(); i++) {
         cout << i + 1 << ". " << ranking[i].first
             << " | Average Grade: " << ranking[i].second << endl;
     }

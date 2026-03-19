@@ -20,7 +20,7 @@ int main()
 			page2();
 		}
 		else if (choice == 3) {
-			page3();
+			scoresPage();
 		}
 		else if (choice == 4) {
 			cout << "Goodbye!" << endl;

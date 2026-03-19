@@ -55,7 +55,7 @@ void cellTest() {
     int score = 0;
     string answer;
 
-    for (int i = 0; i <= 20; i++) {
+    for (int i = 0; i < 20; i++) {
         system("cls");
         cout << "-----------------------------------------------------------------------------\n";
         cout << "                           TEST CRAFT - BIOLOGY TEST                         \n";
