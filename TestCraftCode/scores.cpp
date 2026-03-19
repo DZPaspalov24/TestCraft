@@ -20,9 +20,9 @@ void scoresPage() {
 
     ifstream file("scores.txt");
     if (!file) {
-        cout << "No scores recorded yet.\n";
+        cout << "No scores recorded yet." << endl;
         int back;
-        cout << "\nPress 1 to return: ";
+        cout << "Press 1 to return: ";
         cin >> back;
         return;
     }
@@ -31,18 +31,16 @@ void scoresPage() {
     string name, test;
     int score, grade;
 
-    // Read all records
     while (file >> name >> test >> score >> grade) {
         players[name].push_back({ test, score, grade });
     }
     file.close();
 
     if (players.empty()) {
-        cout << "No scores found.\n";
+        cout << "No scores found." << endl;
         return;
     }
 
-    // Print each player’s scores and average
     for (auto& p : players) {
         cout << p.first << endl;
 
@@ -55,10 +53,9 @@ void scoresPage() {
         }
 
         double avg = (double)totalGrade / p.second.size();
-        cout << "   Average Grade: " << avg << "\n\n";
+        cout << "   Average Grade: " << avg << endl;
     }
 
-    // Leaderboard
     cout << "============= LEADERBOARD =============\n";
 
     vector<pair<string, double>> ranking;
@@ -78,6 +75,15 @@ void scoresPage() {
     }
 
     int back;
-    cout << "\nPress 1 to return: ";
+    cout << "Press 1 to return: ";
     cin >> back;
+    while (true) {
+        if (back == 1) {
+            return;
+        }
+        else {
+            cout << "Invalid input. Chose again: ";
+            cin >> back;
+        }
+    }
 }

@@ -26,17 +26,17 @@ int showMenu() {
 void page1() {
 	system("cls");
 	int choice;
-
+	
 	cout << "-----------------------------------------------------------------------------" << endl;
 	cout << "                                  TEST CRAFT                                 " << endl;
 	cout << "-----------------------------------------------------------------------------" << endl;
 	cout << " " << endl;
-	cout << "Topic 1: Cell - Structure and Functions" << endl;
-	cout << "Topic 2: Unicellular and Multicellular Organisms" << endl;
-	cout << "Topic 3: Plants" << endl;
-	cout << "Topic 4: Animals" << endl;
-	cout << "Topic 5: Humans as a Biological Species" << endl;
-	cout << "Topic 6: Heredity and Variation" << endl;
+	cout << "Topic 1: Cell test" << endl;
+	cout << "Topic 2: Organisms test" << endl;
+	cout << "Topic 3: Plants test" << endl;
+	cout << "Topic 4: Animals test" << endl;
+	cout << "Topic 5: Humans test" << endl;
+	cout << "Topic 6: Genetics test" << endl;
 	cout << "7: Return to the main menu" << endl;
 	cout << endl;
 	cout << "Which topic would you like to take a test on:  ";

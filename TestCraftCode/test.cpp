@@ -55,11 +55,12 @@ void cellTest() {
     int score = 0;
     string answer;
 
-    for (int i = 0; i < 20; i++) {
+    for (int i = 0; i <= 20; i++) {
         system("cls");
-        cout << "-----------------------------------------------------------------------------\n";
-        cout << "                           TEST CRAFT - BIOLOGY TEST                         \n";
-        cout << "-----------------------------------------------------------------------------\n\n";
+        cout << "-----------------------------------------------------------------------------" << endl;
+        cout << "                           TEST CRAFT - BIOLOGY TEST                         " << endl;
+        cout << "-----------------------------------------------------------------------------" << endl;
+        cout << endl;
 
         cout << "Question " << i << ": " << quiz[i].question << endl;
         cout << "Answer: ";
@@ -80,12 +81,15 @@ void cellTest() {
 
     system("cls");
     cout << "Your score: " << score << endl;
-    cout << "Your grade: " << gradeText << endl << endl;
+    cout << "Your grade: " << gradeText << endl;
 
     string name;
     int takenBefore;
 
-    cout << "Have you taken a test before?\n1 - Yes\n2 - No\nChoice: ";
+    cout << "Have you taken a test before?" << endl;
+    cout << "1 - Yes" << endl;
+    cout << "2 - No" << endl;
+    cout << "Choice: ";
     cin >> takenBefore;
     cin.ignore();
 
@@ -102,11 +106,14 @@ void cellTest() {
         file.close();
 
         if (names.empty()) {
-            cout << "No previous players found.\nEnter your name: ";
+            system("cls");
+            cout << "No previous users found." << endl;
+            cout << "Enter your name: ";
             getline(cin, name);
         }
         else {
-            cout << "\nSelect your name:\n";
+            system("cls");
+            cout << "Select your name:" << endl;
             for (int i = 0; i < names.size(); i++)
                 cout << i + 1 << " - " << names[i] << endl;
 
@@ -118,40 +125,48 @@ void cellTest() {
             name = names[choice - 1];
         }
 
-        cout << "Welcome back, " << name << "!\n";
+        cout << "Welcome back, " << name << "!" << endl;
     }
     else {
-        cout << "Enter your new name: ";
+        system("cls");
+        cout << "Enter your name: ";
         getline(cin, name);
-        cout << "New player created: " << name << endl;
+        cout << "New student acount created: " << name << endl;
     }
 
     ofstream out("scores.txt", ios::app);
-    out << name << " CellTest " << score << " " << gradeNum << endl;
+    out << name << " Cell test " << score << " " << gradeNum << endl;
     out.close();
 
-    cout << "Saving: " << name << " CellTest " << score << " " << gradeNum << endl;
+    system("cls");
+    cout << "Saving: " << name << " Cell test score: " << score << " grade: " << gradeNum << endl;
 
-    out << name << " CellTest " << score << " " << gradeNum << endl;
+    out << name << " Cell test score: " << score << " grade: " << gradeNum << endl;
     out.close();
 
-    cout << "Score saved!\n\n";
+    cout << "Score saved!" << endl;
 
     int back;
     cout << "Press 1 to return to menu: ";
     cin >> back;
-    while (back != 1) {
-        cout << "Invalid. Try again: ";
-        cin >> back;
+
+    while (true) {
+        if (back == 1) {
+            return;
+        }
+        else {
+            cout << "Invalid input. Chose again: ";
+            cin >> back;
+        }
     }
 }
 
 
 
-
 void organismsTest() {
+
     vector<QA> quiz = {
-      {"What is a single-celled organism called?", "Unicellular"},
+    {"What is a single-celled organism called?", "Unicellular"},
     {"What is an organism made of many cells?", "Multicellular"},
     {"Which kingdom includes all animals?", "Animalia"},
     {"Which kingdom includes all plants?", "Plantae"},
@@ -187,46 +202,102 @@ void organismsTest() {
     mt19937 g(rd());
     shuffle(quiz.begin(), quiz.end(), g);
 
-    string answer;
     int score = 0;
+    string answer;
 
     for (int i = 0; i <= 20; i++) {
         system("cls");
         cout << "-----------------------------------------------------------------------------" << endl;
-        cout << "                           TEST CRAFT-BIOLOGY TESTS                          " << endl;
+        cout << "                           TEST CRAFT - BIOLOGY TEST                         " << endl;
         cout << "-----------------------------------------------------------------------------" << endl;
-        cout << " " << endl;
+        cout << endl;
+
         cout << "Question " << i << ": " << quiz[i].question << endl;
         cout << "Answer: ";
         getline(cin, answer);
 
-        if (answer == quiz[i].answer) {
+        if (answer == quiz[i].answer)
             score += 5;
-        }
     }
 
-    string grade;
-    int back = 0;
-    if (score <= 40) {
-        grade = "Fail, 2.";
-    }
-    else if (score >= 41 && score <= 55) {
-        grade = "Below Average, 3.";
-    }
-    else if (score >= 56 && score <= 70) {
-        grade = "Average, 4.";
-    }
-    else if (score >= 71 && score <= 85) {
-        grade = "Good, 5.";
-    }
-    else {
-        grade = "Excellent, 6.";
-    }
+    int gradeNum;
+    string gradeText;
+
+    if (score <= 40) { gradeNum = 2; gradeText = "Fail, 2."; }
+    else if (score <= 55) { gradeNum = 3; gradeText = "Below Average, 3."; }
+    else if (score <= 70) { gradeNum = 4; gradeText = "Average, 4."; }
+    else if (score <= 85) { gradeNum = 5; gradeText = "Good, 5."; }
+    else { gradeNum = 6; gradeText = "Excellent, 6."; }
+
     system("cls");
     cout << "Your score: " << score << endl;
-    cout << "Your grade is: " << grade << endl;
-    cout << endl;
-    cout << "Press 1 to go to the main menu: ";
+    cout << "Your grade: " << gradeText << endl;
+
+    string name;
+    int takenBefore;
+
+    cout << "Have you taken a test before?" << endl;
+    cout << "1 - Yes" << endl;
+    cout << "2 - No" << endl;
+    cout << "Choice: ";
+    cin >> takenBefore;
+    cin.ignore();
+
+    if (takenBefore == 1) {
+        ifstream file("scores.txt");
+        vector<string> names;
+        string fileName, test;
+        int fileScore, fileGrade;
+
+        while (file >> fileName >> test >> fileScore >> fileGrade) {
+            if (find(names.begin(), names.end(), fileName) == names.end())
+                names.push_back(fileName);
+        }
+        file.close();
+
+        if (names.empty()) {
+            system("cls");
+            cout << "No previous users found." << endl;
+            cout << "Enter your name: ";
+            getline(cin, name);
+        }
+        else {
+            system("cls");
+            cout << "Select your name:" << endl;
+            for (int i = 0; i < names.size(); i++)
+                cout << i + 1 << " - " << names[i] << endl;
+
+            int choice;
+            cout << "Choice: ";
+            cin >> choice;
+            cin.ignore();
+
+            name = names[choice - 1];
+        }
+
+        cout << "Welcome back, " << name << "!" << endl;
+    }
+    else {
+        system("cls");
+        cout << "Enter your name: ";
+        getline(cin, name);
+        cout << "New student acount created: " << name << endl;
+    }
+
+    ofstream out("scores.txt", ios::app);
+    out << name << " Organisms test " << score << " " << gradeNum << endl;
+    out.close();
+
+    system("cls");
+    cout << "Saving: " << name << " Organisms test score: " << score << " grade: " << gradeNum << endl;
+
+    out << name << " Organisms test score: " << score << " grade: " << gradeNum << endl;
+    out.close();
+
+    cout << "Score saved!" << endl;
+
+    int back;
+    cout << "Press 1 to return to menu: ";
     cin >> back;
 
     while (true) {
@@ -240,9 +311,15 @@ void organismsTest() {
     }
 }
 
+
+
+
+
+
+
 void plantsTest() {
     vector<QA> quiz = {
-      {"What process do plants use to make their own food?", "Photosynthesis"},
+    {"What process do plants use to make their own food?", "Photosynthesis"},
     {"Which pigment captures sunlight in plants?", "Chlorophyll"},
     {"What organelle in plant cells carries out photosynthesis?", "Chloroplast"},
     {"What is the rigid outer layer of plant cells called?", "Cellwall"},
@@ -279,46 +356,102 @@ void plantsTest() {
     mt19937 g(rd());
     shuffle(quiz.begin(), quiz.end(), g);
 
-    string answer;
     int score = 0;
+    string answer;
 
     for (int i = 0; i <= 20; i++) {
         system("cls");
         cout << "-----------------------------------------------------------------------------" << endl;
-        cout << "                           TEST CRAFT-BIOLOGY TESTS                          " << endl;
+        cout << "                           TEST CRAFT - BIOLOGY TEST                         " << endl;
         cout << "-----------------------------------------------------------------------------" << endl;
-        cout << " " << endl;
+        cout << endl;
+
         cout << "Question " << i << ": " << quiz[i].question << endl;
         cout << "Answer: ";
         getline(cin, answer);
 
-        if (answer == quiz[i].answer) {
+        if (answer == quiz[i].answer)
             score += 5;
-        }
     }
 
-    string grade;
-    int back = 0;
-    if (score <= 40) {
-        grade = "Fail, 2.";
-    }
-    else if (score >= 41 && score <= 55) {
-        grade = "Below Average, 3.";
-    }
-    else if (score >= 56 && score <= 70) {
-        grade = "Average, 4.";
-    }
-    else if (score >= 71 && score <= 85) {
-        grade = "Good, 5.";
-    }
-    else {
-        grade = "Excellent, 6.";
-    }
+    int gradeNum;
+    string gradeText;
+
+    if (score <= 40) { gradeNum = 2; gradeText = "Fail, 2."; }
+    else if (score <= 55) { gradeNum = 3; gradeText = "Below Average, 3."; }
+    else if (score <= 70) { gradeNum = 4; gradeText = "Average, 4."; }
+    else if (score <= 85) { gradeNum = 5; gradeText = "Good, 5."; }
+    else { gradeNum = 6; gradeText = "Excellent, 6."; }
+
     system("cls");
     cout << "Your score: " << score << endl;
-    cout << "Your grade is: " << grade << endl;
-    cout << endl;
-    cout << "Press 1 to go to the main menu: ";
+    cout << "Your grade: " << gradeText << endl;
+
+    string name;
+    int takenBefore;
+
+    cout << "Have you taken a test before?" << endl;
+    cout << "1 - Yes" << endl;
+    cout << "2 - No" << endl;
+    cout << "Choice: ";
+    cin >> takenBefore;
+    cin.ignore();
+
+    if (takenBefore == 1) {
+        ifstream file("scores.txt");
+        vector<string> names;
+        string fileName, test;
+        int fileScore, fileGrade;
+
+        while (file >> fileName >> test >> fileScore >> fileGrade) {
+            if (find(names.begin(), names.end(), fileName) == names.end())
+                names.push_back(fileName);
+        }
+        file.close();
+
+        if (names.empty()) {
+            system("cls");
+            cout << "No previous users found." << endl;
+            cout << "Enter your name: ";
+            getline(cin, name);
+        }
+        else {
+            system("cls");
+            cout << "Select your name:" << endl;
+            for (int i = 0; i < names.size(); i++)
+                cout << i + 1 << " - " << names[i] << endl;
+
+            int choice;
+            cout << "Choice: ";
+            cin >> choice;
+            cin.ignore();
+
+            name = names[choice - 1];
+        }
+
+        cout << "Welcome back, " << name << "!" << endl;
+    }
+    else {
+        system("cls");
+        cout << "Enter your name: ";
+        getline(cin, name);
+        cout << "New student acount created: " << name << endl;
+    }
+
+    ofstream out("scores.txt", ios::app);
+    out << name << " Plants test " << score << " " << gradeNum << endl;
+    out.close();
+
+    system("cls");
+    cout << "Saving: " << name << " Plants test score: " << score << " grade: " << gradeNum << endl;
+
+    out << name << " Plants test score: " << score << " grade: " << gradeNum << endl;
+    out.close();
+
+    cout << "Score saved!" << endl;
+
+    int back;
+    cout << "Press 1 to return to menu: ";
     cin >> back;
 
     while (true) {
@@ -331,6 +464,9 @@ void plantsTest() {
         }
     }
 }
+
+
+
 
 void animalsTest() {
     vector<QA> quiz = {
@@ -371,46 +507,102 @@ void animalsTest() {
     mt19937 g(rd());
     shuffle(quiz.begin(), quiz.end(), g);
 
-    string answer;
     int score = 0;
+    string answer;
 
     for (int i = 0; i <= 20; i++) {
         system("cls");
         cout << "-----------------------------------------------------------------------------" << endl;
-        cout << "                           TEST CRAFT-BIOLOGY TESTS                          " << endl;
+        cout << "                           TEST CRAFT - BIOLOGY TEST                         " << endl;
         cout << "-----------------------------------------------------------------------------" << endl;
-        cout << " " << endl;
+        cout << endl;
+
         cout << "Question " << i << ": " << quiz[i].question << endl;
         cout << "Answer: ";
         getline(cin, answer);
 
-        if (answer == quiz[i].answer) {
+        if (answer == quiz[i].answer)
             score += 5;
-        }
     }
 
-    string grade;
-    int back = 0;
-    if (score <= 40) {
-        grade = "Fail, 2.";
-    }
-    else if (score >= 41 && score <= 55) {
-        grade = "Below Average, 3.";
-    }
-    else if (score >= 56 && score <= 70) {
-        grade = "Average, 4.";
-    }
-    else if (score >= 71 && score <= 85) {
-        grade = "Good, 5.";
-    }
-    else {
-        grade = "Excellent, 6.";
-    }
+    int gradeNum;
+    string gradeText;
+
+    if (score <= 40) { gradeNum = 2; gradeText = "Fail, 2."; }
+    else if (score <= 55) { gradeNum = 3; gradeText = "Below Average, 3."; }
+    else if (score <= 70) { gradeNum = 4; gradeText = "Average, 4."; }
+    else if (score <= 85) { gradeNum = 5; gradeText = "Good, 5."; }
+    else { gradeNum = 6; gradeText = "Excellent, 6."; }
+
     system("cls");
     cout << "Your score: " << score << endl;
-    cout << "Your grade is: " << grade << endl;
-    cout << endl;
-    cout << "Press 1 to go to the main menu: ";
+    cout << "Your grade: " << gradeText << endl;
+
+    string name;
+    int takenBefore;
+
+    cout << "Have you taken a test before?" << endl;
+    cout << "1 - Yes" << endl;
+    cout << "2 - No" << endl;
+    cout << "Choice: ";
+    cin >> takenBefore;
+    cin.ignore();
+
+    if (takenBefore == 1) {
+        ifstream file("scores.txt");
+        vector<string> names;
+        string fileName, test;
+        int fileScore, fileGrade;
+
+        while (file >> fileName >> test >> fileScore >> fileGrade) {
+            if (find(names.begin(), names.end(), fileName) == names.end())
+                names.push_back(fileName);
+        }
+        file.close();
+
+        if (names.empty()) {
+            system("cls");
+            cout << "No previous users found." << endl;
+            cout << "Enter your name: ";
+            getline(cin, name);
+        }
+        else {
+            system("cls");
+            cout << "Select your name:" << endl;
+            for (int i = 0; i < names.size(); i++)
+                cout << i + 1 << " - " << names[i] << endl;
+
+            int choice;
+            cout << "Choice: ";
+            cin >> choice;
+            cin.ignore();
+
+            name = names[choice - 1];
+        }
+
+        cout << "Welcome back, " << name << "!" << endl;
+    }
+    else {
+        system("cls");
+        cout << "Enter your name: ";
+        getline(cin, name);
+        cout << "New student acount created: " << name << endl;
+    }
+
+    ofstream out("scores.txt", ios::app);
+    out << name << " Animals test " << score << " " << gradeNum << endl;
+    out.close();
+
+    system("cls");
+    cout << "Saving: " << name << " Animals test score: " << score << " grade: " << gradeNum << endl;
+
+    out << name << " Animals test score: " << score << " grade: " << gradeNum << endl;
+    out.close();
+
+    cout << "Score saved!" << endl;
+
+    int back;
+    cout << "Press 1 to return to menu: ";
     cin >> back;
 
     while (true) {
@@ -424,9 +616,12 @@ void animalsTest() {
     }
 }
 
+
+
+
 void humanTest() {
     vector<QA> quiz = {
-{"Which organ pumps blood throughout the body?", "Heart"},
+    {"Which organ pumps blood throughout the body?", "Heart"},
     {"Which blood cells fight infections?", "White blood cells"},
     {"Which blood cells carry oxygen?", "Red blood cells"},
     {"Which system controls body functions using hormones?", "Endocrine"},
@@ -463,46 +658,102 @@ void humanTest() {
     mt19937 g(rd());
     shuffle(quiz.begin(), quiz.end(), g);
 
-    string answer;
     int score = 0;
+    string answer;
 
     for (int i = 0; i <= 20; i++) {
         system("cls");
         cout << "-----------------------------------------------------------------------------" << endl;
-        cout << "                           TEST CRAFT-BIOLOGY TESTS                          " << endl;
+        cout << "                           TEST CRAFT - BIOLOGY TEST                         " << endl;
         cout << "-----------------------------------------------------------------------------" << endl;
-        cout << " " << endl;
+        cout << endl;
+
         cout << "Question " << i << ": " << quiz[i].question << endl;
         cout << "Answer: ";
         getline(cin, answer);
 
-        if (answer == quiz[i].answer) {
+        if (answer == quiz[i].answer)
             score += 5;
-        }
     }
 
-    string grade;
-    int back = 0;
-    if (score <= 40) {
-        grade = "Fail, 2.";
-    }
-    else if (score >= 41 && score <= 55) {
-        grade = "Below Average, 3.";
-    }
-    else if (score >= 56 && score <= 70) {
-        grade = "Average, 4.";
-    }
-    else if (score >= 71 && score <= 85) {
-        grade = "Good, 5.";
-    }
-    else {
-        grade = "Excellent, 6.";
-    }
+    int gradeNum;
+    string gradeText;
+
+    if (score <= 40) { gradeNum = 2; gradeText = "Fail, 2."; }
+    else if (score <= 55) { gradeNum = 3; gradeText = "Below Average, 3."; }
+    else if (score <= 70) { gradeNum = 4; gradeText = "Average, 4."; }
+    else if (score <= 85) { gradeNum = 5; gradeText = "Good, 5."; }
+    else { gradeNum = 6; gradeText = "Excellent, 6."; }
+
     system("cls");
     cout << "Your score: " << score << endl;
-    cout << "Your grade is: " << grade << endl;
-    cout << endl;
-    cout << "Press 1 to go to the main menu: ";
+    cout << "Your grade: " << gradeText << endl;
+
+    string name;
+    int takenBefore;
+
+    cout << "Have you taken a test before?" << endl;
+    cout << "1 - Yes" << endl;
+    cout << "2 - No" << endl;
+    cout << "Choice: ";
+    cin >> takenBefore;
+    cin.ignore();
+
+    if (takenBefore == 1) {
+        ifstream file("scores.txt");
+        vector<string> names;
+        string fileName, test;
+        int fileScore, fileGrade;
+
+        while (file >> fileName >> test >> fileScore >> fileGrade) {
+            if (find(names.begin(), names.end(), fileName) == names.end())
+                names.push_back(fileName);
+        }
+        file.close();
+
+        if (names.empty()) {
+            system("cls");
+            cout << "No previous users found." << endl;
+            cout << "Enter your name: ";
+            getline(cin, name);
+        }
+        else {
+            system("cls");
+            cout << "Select your name:" << endl;
+            for (int i = 0; i < names.size(); i++)
+                cout << i + 1 << " - " << names[i] << endl;
+
+            int choice;
+            cout << "Choice: ";
+            cin >> choice;
+            cin.ignore();
+
+            name = names[choice - 1];
+        }
+
+        cout << "Welcome back, " << name << "!" << endl;
+    }
+    else {
+        system("cls");
+        cout << "Enter your name: ";
+        getline(cin, name);
+        cout << "New student acount created: " << name << endl;
+    }
+
+    ofstream out("scores.txt", ios::app);
+    out << name << " Human test " << score << " " << gradeNum << endl;
+    out.close();
+
+    system("cls");
+    cout << "Saving: " << name << " Human test score: " << score << " grade: " << gradeNum << endl;
+
+    out << name << " Human test score: " << score << " grade: " << gradeNum << endl;
+    out.close();
+
+    cout << "Score saved!" << endl;
+
+    int back;
+    cout << "Press 1 to return to menu: ";
     cin >> back;
 
     while (true) {
@@ -515,6 +766,7 @@ void humanTest() {
         }
     }
 }
+
 
 void geneticsTest() {
     vector<QA> quiz = {
@@ -554,46 +806,102 @@ void geneticsTest() {
     mt19937 g(rd());
     shuffle(quiz.begin(), quiz.end(), g);
 
-    string answer;
     int score = 0;
+    string answer;
 
     for (int i = 0; i <= 20; i++) {
         system("cls");
         cout << "-----------------------------------------------------------------------------" << endl;
-        cout << "                           TEST CRAFT-BIOLOGY TESTS                          " << endl;
+        cout << "                           TEST CRAFT - BIOLOGY TEST                         " << endl;
         cout << "-----------------------------------------------------------------------------" << endl;
-        cout << " " << endl;
+        cout << endl;
+
         cout << "Question " << i << ": " << quiz[i].question << endl;
         cout << "Answer: ";
         getline(cin, answer);
 
-        if (answer == quiz[i].answer) {
+        if (answer == quiz[i].answer)
             score += 5;
-        }
     }
 
-    string grade;
-    int back = 0;
-    if (score <= 40) {
-        grade = "Fail, 2.";
-    }
-    else if (score >= 41 && score <= 55) {
-        grade = "Below Average, 3.";
-    }
-    else if (score >= 56 && score <= 70) {
-        grade = "Average, 4.";
-    }
-    else if (score >= 71 && score <= 85) {
-        grade = "Good, 5.";
-    }
-    else {
-        grade = "Excellent, 6.";
-    }
+    int gradeNum;
+    string gradeText;
+
+    if (score <= 40) { gradeNum = 2; gradeText = "Fail, 2."; }
+    else if (score <= 55) { gradeNum = 3; gradeText = "Below Average, 3."; }
+    else if (score <= 70) { gradeNum = 4; gradeText = "Average, 4."; }
+    else if (score <= 85) { gradeNum = 5; gradeText = "Good, 5."; }
+    else { gradeNum = 6; gradeText = "Excellent, 6."; }
+
     system("cls");
     cout << "Your score: " << score << endl;
-    cout << "Your grade is: " << grade << endl;
-    cout << endl;
-    cout << "Press 1 to go to the main menu: ";
+    cout << "Your grade: " << gradeText << endl;
+
+    string name;
+    int takenBefore;
+
+    cout << "Have you taken a test before?" << endl; 
+    cout << "1 - Yes" << endl;
+    cout << "2 - No" << endl; 
+    cout << "Choice: ";
+    cin >> takenBefore;
+    cin.ignore();
+
+    if (takenBefore == 1) {
+        ifstream file("scores.txt");
+        vector<string> names;
+        string fileName, test;
+        int fileScore, fileGrade;
+
+        while (file >> fileName >> test >> fileScore >> fileGrade) {
+            if (find(names.begin(), names.end(), fileName) == names.end())
+                names.push_back(fileName);
+        }
+        file.close();
+
+        if (names.empty()) {
+            system("cls");
+            cout << "No previous users found." << endl;
+            cout << "Enter your name: ";
+            getline(cin, name);
+        }
+        else {
+            system("cls");
+            cout << "Select your name:" << endl;
+            for (int i = 0; i < names.size(); i++)
+                cout << i + 1 << " - " << names[i] << endl;
+
+            int choice;
+            cout << "Choice: ";
+            cin >> choice;
+            cin.ignore();
+
+            name = names[choice - 1];
+        }
+
+        cout << "Welcome back, " << name << "!" << endl;
+    }
+    else {
+        system("cls");
+        cout << "Enter your name: ";
+        getline(cin, name);
+        cout << "New student acount created: " << name << endl;
+    }
+
+    ofstream out("scores.txt", ios::app);
+    out << name << " Genetics test " << score << " " << gradeNum << endl;
+    out.close();
+    
+    system("cls");
+    cout << "Saving: " << name << " Genetics test score: " << score << " grade: " << gradeNum << endl;
+
+    out << name << " Genetics test score: " << score << " grade: " << gradeNum << endl;
+    out.close();
+
+    cout << "Score saved!" << endl;
+
+    int back;
+    cout << "Press 1 to return to menu: ";
     cin >> back;
 
     while (true) {
