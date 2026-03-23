@@ -16,7 +16,8 @@ struct TestRecord {
 
 void scoresPage() {
     system("cls");
-    cout << "================ SCORE BOARD ================\n\n";
+    cout << "================ SCORE BOARD ================" << endl;
+    cout << endl;
 
     ifstream file("scores.txt");
     if (!file) {
@@ -56,7 +57,7 @@ void scoresPage() {
         cout << "   Average Grade: " << avg << endl;
     }
 
-    cout << "============= LEADERBOARD =============\n";
+    cout << "============= LEADERBOARD =============" << endl;
 
     vector<pair<string, double>> ranking;
     for (auto& p : players) {

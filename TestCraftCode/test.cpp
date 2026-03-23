@@ -2,16 +2,18 @@
 #include <string>
 #include <vector>
 #include <algorithm>
-#include <ctime>
 #include <random>
 #include <fstream>
+#include <limits>
 #include "menu.h"
+
 using namespace std;
 
 struct QA {
     string question;
     string answer;
 };
+
 
 int runQuiz(vector<QA>& quiz) {
     random_device rd;
@@ -21,10 +23,10 @@ int runQuiz(vector<QA>& quiz) {
     int score = 0;
     string answer;
 
-    for (int i = 0; i <= 20; i++) {
+    for (int i = 0; i <= 20 && i < quiz.size(); i++) {
         system("cls");
         cout << "-----------------------------------------------------------------------------" << endl;
-        cout << "                           TEST CRAFT - BIOLOGY TEST                         " << endl;
+        cout << "                           TEST CRAFT - BIOLOGY TEST" << endl;
         cout << "-----------------------------------------------------------------------------" << endl;
         cout << endl;
 
@@ -39,27 +41,26 @@ int runQuiz(vector<QA>& quiz) {
     return score;
 }
 
-void printGrade(int score) {
-    int gradeNum;
-    string gradeText;
-
-    if (score <= 40) { gradeNum = 2; gradeText = "Fail, 2."; }
-    else if (score <= 55) { gradeNum = 3; gradeText = "Below Average, 3."; }
-    else if (score <= 70) { gradeNum = 4; gradeText = "Average, 4."; }
-    else if (score <= 85) { gradeNum = 5; gradeText = "Good, 5."; }
-    else { gradeNum = 6; gradeText = "Excellent, 6."; }
-
-    system("cls");
-    cout << "Your score: " << score << endl;
-    cout << "Your grade: " << gradeText << endl;
-}
-
 int getGradeNum(int score) {
     if (score <= 40) return 2;
     else if (score <= 55) return 3;
     else if (score <= 70) return 4;
     else if (score <= 85) return 5;
     else return 6;
+}
+
+void printGrade(int score) {
+    string gradeText;
+
+    if (score <= 40) gradeText = "Fail, 2.";
+    else if (score <= 55) gradeText = "Below Average, 3.";
+    else if (score <= 70) gradeText = "Average, 4.";
+    else if (score <= 85) gradeText = "Good, 5.";
+    else gradeText = "Excellent, 6.";
+
+    system("cls");
+    cout << "Your score: " << score << endl;
+    cout << "Your grade: " << gradeText << endl;
 }
 
 string getName() {
@@ -71,36 +72,35 @@ string getName() {
     cout << "2 - No" << endl;
     cout << "Choice: ";
     cin >> takenBefore;
-    cin.ignore();
+    //cin.ignore(numeric_limits<streamsize>::max(), '\n');
 
     if (takenBefore == 1) {
         ifstream file("scores.txt");
         vector<string> names;
-        string fileName, test;
+
+        string fileName, testName, testWord;
         int fileScore, fileGrade;
 
-        while (file >> fileName >> test >> fileScore >> fileGrade) {
+        while (file >> fileName >> testName >> testWord >> fileScore >> fileGrade) {
             if (find(names.begin(), names.end(), fileName) == names.end())
                 names.push_back(fileName);
         }
         file.close();
 
         if (names.empty()) {
-            system("cls");
             cout << "No previous users found." << endl;
-            cout << "Enter your name: ";
+            cout << "Enter your name : ";
             getline(cin, name);
         }
         else {
-            system("cls");
-            cout << "Select your name:" << endl;
+            cout << "Select your name: " << endl;
             for (int i = 0; i < names.size(); i++)
                 cout << i + 1 << " - " << names[i] << endl;
 
             int choice;
             cout << "Choice: ";
             cin >> choice;
-            cin.ignore();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
 
             name = names[choice - 1];
         }
@@ -108,30 +108,36 @@ string getName() {
         cout << "Welcome back, " << name << "!" << endl;
     }
     else {
-        system("cls");
         cout << "Enter your name: ";
         getline(cin, name);
-        cout << "New student acount created: " << name << endl;
+        cout << "New student account created: " << name << endl;
     }
 
     return name;
 }
 
+
 void saveScore(string name, string testName, int score, int gradeNum) {
     ofstream out("scores.txt", ios::app);
-    out << name << " " << testName << " test " << score << " " << gradeNum << endl;
+
+    out << name << " " << testName << " test "
+        << score << " " << gradeNum << endl;
+
     out.close();
 
     system("cls");
-    cout << "Saving: " << name << " " << testName << " test score: " << score << " grade: " << gradeNum << endl;
+    cout << "Saving: " << name << " " << testName
+        << " test score: " << score
+        << " grade: " << gradeNum << endl;
+
     cout << "Score saved!" << endl;
 }
 
+
 void returnToMenu() {
     int back;
-    cout << "Press 1 to return to menu: ";
+    cout << "Press 1 to go back to the main menu: ";
     cin >> back;
-
     while (true) {
         if (back == 1) {
             return;
@@ -141,885 +147,185 @@ void returnToMenu() {
             cin >> back;
         }
     }
+}
+
+
+void runTest(vector<QA> quiz, string testName) {
+    int score = runQuiz(quiz);
+    printGrade(score);
+
+    string name = getName();
+    int grade = getGradeNum(score);
+
+    saveScore(name, testName, score, grade);
+    returnToMenu();
 }
 
 
 void cellTest() {
-
     vector<QA> quiz = {
         {"What is the smallest unit of life?", "Cell"},
         {"Which organ pumps blood throughout the body?", "Heart"},
         {"What structure controls cell activities?", "Nucleus"},
-        {"Which blood cells are responsible for fighting infections?", "White blood cells"},
+        {"Which blood cells fight infections?", "White blood cells"},
         {"Which blood cells carry oxygen?", "Red blood cells"},
-        {"Which organ produces Insulin?", "Pancreas"},
-        {"What organelle stores water and nutrients?", "Vacuole"},
+        {"Which organ produces insulin?", "Pancreas"},
+        {"What organelle stores water?", "Vacuole"},
         {"Which organ stores urine?", "Bladder"},
-        {"Which organ filters toxins from the blood?", "Liver"},
-        {"What is the movement of particles from high to low concentration called?", "Diffusion"},
-        {"Which vessels carry blood away from the heart?", "Arteries"},
-        {"Which vessels carry blood back to the heart?", "Veins"},
-        {"What type of cells do not have a nucleus?", "Prokaryotes"},
-        {"What is the genetic material in cells called?", "DNA"},
-        {"What connects muscles to bones?", "Tendons"},
-        {"What connects bones to other bones?", "Ligaments"},
-        {"What process allows plants to make food using sunlight?", "Photosynthesis"},
-        {"Which part of eyes controls the amount of light entering?", "Iris"},
-        {"Which part of eyes controls the amount of light entering?", "Pupil"},
-        {"What microorganism type lacks a nucleus?", "Bacteria"},
-        {"Which muscle separates the chest from the abdomen?", "Diaphragm"},
-        {"What is the outer layer of the skin called?", "Epidermis"},
-        {"What is the largest internal organ?", "Liver"},
-        {"How many bones are in the human body?", "206"},
-        {"What structure contains DNA in eukaryotic cells?", "Nucleus"},
-        {"What is the tube that carries air to the lungs?", "Trachea"},
-        {"Which cell transmits nerve signals?", "Neuron"},
-        {"Which part of the neuron receives signals?", "Dendrites"},
-        {"Which part of the neuron sends signals?", "Axon"},
-        {"Which hormone is released during stress?", "Cortisol"},
+        {"Which organ filters toxins?", "Liver"},
+        {"What is movement from high to low concentration?", "Diffusion"},
+        {"Which vessels carry blood away?", "Arteries"},
+        {"Which carry blood back?", "Veins"},
+        {"Cells without nucleus?", "Prokaryotes"},
+        {"Genetic material?", "DNA"},
+        {"Connect muscles to bones?", "Tendons"},
+        {"Connect bones?", "Ligaments"},
+        {"Plants make food using?", "Photosynthesis"},
+        {"Eye part controlling light?", "Iris"},
+        {"Another light control part?", "Pupil"},
+        {"Microorganism without nucleus?", "Bacteria"},
+        {"Muscle separating chest?", "Diaphragm"}
     };
 
-    random_device rd;
-    mt19937 g(rd());
-    shuffle(quiz.begin(), quiz.end(), g);
-
-    int score = 0;
-    string answer;
-
-    for (int i = 0; i <= 20; i++) {
-        system("cls");
-        cout << "-----------------------------------------------------------------------------" << endl;
-        cout << "                           TEST CRAFT - BIOLOGY TEST                         " << endl;
-        cout << "-----------------------------------------------------------------------------" << endl;
-        cout << endl;
-
-        cout << "Question " << i << ": " << quiz[i].question << endl;
-        cout << "Answer: ";
-        getline(cin, answer);
-
-        if (answer == quiz[i].answer)
-            score += 5;
-    }
-
-    int gradeNum;
-    string gradeText;
-
-    if (score <= 40) { gradeNum = 2; gradeText = "Fail, 2."; }
-    else if (score <= 55) { gradeNum = 3; gradeText = "Below Average, 3."; }
-    else if (score <= 70) { gradeNum = 4; gradeText = "Average, 4."; }
-    else if (score <= 85) { gradeNum = 5; gradeText = "Good, 5."; }
-    else { gradeNum = 6; gradeText = "Excellent, 6."; }
-
-    system("cls");
-    cout << "Your score: " << score << endl;
-    cout << "Your grade: " << gradeText << endl;
-
-    string name;
-    int takenBefore;
-
-    cout << "Have you taken a test before?" << endl;
-    cout << "1 - Yes" << endl;
-    cout << "2 - No" << endl;
-    cout << "Choice: ";
-    cin >> takenBefore;
-    cin.ignore();
-
-    if (takenBefore == 1) {
-        ifstream file("scores.txt");
-        vector<string> names;
-        string fileName, test;
-        int fileScore, fileGrade;
-
-        while (file >> fileName >> test >> fileScore >> fileGrade) {
-            if (find(names.begin(), names.end(), fileName) == names.end())
-                names.push_back(fileName);
-        }
-        file.close();
-
-        if (names.empty()) {
-            system("cls");
-            cout << "No previous users found." << endl;
-            cout << "Enter your name: ";
-            getline(cin, name);
-        }
-        else {
-            system("cls");
-            cout << "Select your name:" << endl;
-            for (int i = 0; i < names.size(); i++)
-                cout << i + 1 << " - " << names[i] << endl;
-
-            int choice;
-            cout << "Choice: ";
-            cin >> choice;
-            cin.ignore();
-
-            name = names[choice - 1];
-        }
-
-        cout << "Welcome back, " << name << "!" << endl;
-    }
-    else {
-        system("cls");
-        cout << "Enter your name: ";
-        getline(cin, name);
-        cout << "New student acount created: " << name << endl;
-    }
-
-    ofstream out("scores.txt", ios::app);
-    out << name << " Cell test " << score << " " << gradeNum << endl;
-    out.close();
-
-    system("cls");
-    cout << "Saving: " << name << " Cell test score: " << score << " grade: " << gradeNum << endl;
-
-    cout << "Score saved!" << endl;
-
-    int back;
-    cout << "Press 1 to return to menu: ";
-    cin >> back;
-
-    while (true) {
-        if (back == 1) {
-            return;
-        }
-        else {
-            cout << "Invalid input. Chose again: ";
-            cin >> back;
-        }
-    }
+    runTest(quiz, "Cell");
 }
-
-
 
 void organismsTest() {
-
     vector<QA> quiz = {
-    {"What is a single-celled organism called?", "Unicellular"},
-    {"What is an organism made of many cells?", "Multicellular"},
-    {"Which kingdom includes all animals?", "Animalia"},
-    {"Which kingdom includes all plants?", "Plantae"},
-    {"Which kingdom includes fungi?", "Fungi"},
-    {"Which kingdom includes bacteria?", "Monera"},
-    {"Which kingdom includes protists?", "Protista"},
-    {"What type of reproduction produces genetically identical offspring?", "Asexual"},
-    {"What type of reproduction involves two parents?", "Sexual"},
-    {"What is the basic unit of structure in all living organisms?", "Cell"},
-    {"What is an autotroph?", "Producer"},
-    {"What is a heterotroph?", "Consumer"},
-    {"What do herbivores eat?", "Plants"},
-    {"What do carnivores eat?", "Animals"},
-    {"What do omnivores eat?", "Both"},
-    {"What is a producer in an ecosystem?", "Organism"},
-    {"What is a consumer in an ecosystem?", "Organism"},
-    {"What is a decomposer?", "Fungi"},
-    {"Which microorganism can be used in fermentation?", "Yeast"},
-    {"Which microorganisms can cause diseases?", "Pathogens"},
-    {"What is the study of organisms and their classification?", "Taxonomy"},
-    {"What is the term for organisms that live in extreme environments?", "Extremophiles"},
-    {"Which microorganisms are prokaryotic?", "Bacteria"},
-    {"Which microorganisms are eukaryotic?", "Protists"},
-    {"What is the difference between prokaryotic and eukaryotic cells?", "Nucleus"},
-    {"What is an example of a unicellular organism?", "Amoeba"},
-    {"What is an example of a multicellular organism?", "Human"},
-    {"Which organisms make their own food using sunlight?", "Plants"},
-    {"Which organisms consume other organisms for energy?", "Animals"},
-    {"What term describes organisms living together and interacting?", "Community"}
+        {"Single-celled organism?", "Unicellular"},
+        {"Many-celled organism?", "Multicellular"},
+        {"Animal kingdom?", "Animalia"},
+        {"Plant kingdom?", "Plantae"},
+        {"Fungi kingdom?", "Fungi"},
+        {"Bacteria kingdom?", "Monera"},
+        {"Identical reproduction?", "Asexual"},
+        {"Two-parent reproduction?", "Sexual"},
+        {"Basic unit of life?", "Cell"},
+        {"Autotroph?", "Producer"},
+        {"Heterotroph?", "Consumer"},
+        {"Herbivores eat?", "Plants"},
+        {"Carnivores eat?", "Animals"},
+        {"Omnivores eat?", "Both"},
+        {"Decomposer?", "Fungi"},
+        {"Fermentation organism?", "Yeast"},
+        {"Disease-causing?", "Pathogens"},
+        {"Classification study?", "Taxonomy"},
+        {"Unicellular example?", "Amoeba"},
+        {"Multicellular example?", "Human"},
+        {"Photosynthesis organisms?", "Plants"}
     };
 
-    random_device rd;
-    mt19937 g(rd());
-    shuffle(quiz.begin(), quiz.end(), g);
-
-    int score = 0;
-    string answer;
-
-    for (int i = 0; i <= 20; i++) {
-        system("cls");
-        cout << "-----------------------------------------------------------------------------" << endl;
-        cout << "                           TEST CRAFT - BIOLOGY TEST                         " << endl;
-        cout << "-----------------------------------------------------------------------------" << endl;
-        cout << endl;
-
-        cout << "Question " << i << ": " << quiz[i].question << endl;
-        cout << "Answer: ";
-        getline(cin, answer);
-
-        if (answer == quiz[i].answer)
-            score += 5;
-    }
-
-    int gradeNum;
-    string gradeText;
-
-    if (score <= 40) { gradeNum = 2; gradeText = "Fail, 2."; }
-    else if (score <= 55) { gradeNum = 3; gradeText = "Below Average, 3."; }
-    else if (score <= 70) { gradeNum = 4; gradeText = "Average, 4."; }
-    else if (score <= 85) { gradeNum = 5; gradeText = "Good, 5."; }
-    else { gradeNum = 6; gradeText = "Excellent, 6."; }
-
-    system("cls");
-    cout << "Your score: " << score << endl;
-    cout << "Your grade: " << gradeText << endl;
-
-    string name;
-    int takenBefore;
-
-    cout << "Have you taken a test before?" << endl;
-    cout << "1 - Yes" << endl;
-    cout << "2 - No" << endl;
-    cout << "Choice: ";
-    cin >> takenBefore;
-    cin.ignore();
-
-    if (takenBefore == 1) {
-        ifstream file("scores.txt");
-        vector<string> names;
-        string fileName, test;
-        int fileScore, fileGrade;
-
-        while (file >> fileName >> test >> fileScore >> fileGrade) {
-            if (find(names.begin(), names.end(), fileName) == names.end())
-                names.push_back(fileName);
-        }
-        file.close();
-
-        if (names.empty()) {
-            system("cls");
-            cout << "No previous users found." << endl;
-            cout << "Enter your name: ";
-            getline(cin, name);
-        }
-        else {
-            system("cls");
-            cout << "Select your name:" << endl;
-            for (int i = 0; i < names.size(); i++)
-                cout << i + 1 << " - " << names[i] << endl;
-
-            int choice;
-            cout << "Choice: ";
-            cin >> choice;
-            cin.ignore();
-
-            name = names[choice - 1];
-        }
-
-        cout << "Welcome back, " << name << "!" << endl;
-    }
-    else {
-        system("cls");
-        cout << "Enter your name: ";
-        getline(cin, name);
-        cout << "New student acount created: " << name << endl;
-    }
-
-    ofstream out("scores.txt", ios::app);
-    out << name << " Organisms test " << score << " " << gradeNum << endl;
-    out.close();
-
-    system("cls");
-    cout << "Saving: " << name << " Organisms test score: " << score << " grade: " << gradeNum << endl;
-
-    cout << "Score saved!" << endl;
-
-    int back;
-    cout << "Press 1 to return to menu: ";
-    cin >> back;
-
-    while (true) {
-        if (back == 1) {
-            return;
-        }
-        else {
-            cout << "Invalid input. Chose again: ";
-            cin >> back;
-        }
-    }
+    runTest(quiz, "Organisms");
 }
-
-
-
-
-
-
 
 void plantsTest() {
     vector<QA> quiz = {
-    {"What process do plants use to make their own food?", "Photosynthesis"},
-    {"Which pigment captures sunlight in plants?", "Chlorophyll"},
-    {"What organelle in plant cells carries out photosynthesis?", "Chloroplast"},
-    {"What is the rigid outer layer of plant cells called?", "Cellwall"},
-    {"What stores water and nutrients in plant cells?", "Vacuole"},
-    {"What tissue carries water from roots to leaves?", "Xylem"},
-    {"What tissue carries food from leaves to other parts?", "Phloem"},
-    {"What is the main site of gas exchange in leaves?", "Stomata"},
-    {"What gas do plants take in for photosynthesis?", "Carbon dioxide"},
-    {"What gas is released by plants during photosynthesis?", "Oxygen"},
-    {"Which part of the plant anchors it to the soil?", "Root"},
-    {"Which part of the plant absorbs sunlight?", "Leaf"},
-    {"Which part of the plant supports it and transports nutrients?", "Stem"},
-    {"What type of reproduction involves seeds?", "Sexual"},
-    {"What is reproduction without seeds called?", "Asexual"},
-    {"Which structures contain pollen in flowering plants?", "Anther"},
-    {"Which part of the flower receives pollen?", "Stigma"},
-    {"What is the female reproductive part of a flower?", "Pistil"},
-    {"What is the male reproductive part of a flower?", "Stamen"},
-    {"What protects developing seeds?", "Fruit"},
-    {"What type of plants do not produce flowers?", "Gymnosperms"},
-    {"What type of plants produce flowers?", "Angiosperms"},
-    {"Which plant tissue helps in growth at tips?", "Meristem"},
-    {"What is the green pigment in leaves?", "Chlorophyll"},
-    {"Which process allows water to move up from roots?", "Transpiration"},
-    {"What term describes non-vascular plants?", "Bryophytes"},
-    {"What term describes vascular plants?", "Tracheophytes"},
-    {"Which plant stores food in roots, like carrots?", "Taproot"},
-    {"What structure helps climbing plants attach?", "Tendrils"},
-    {"What is the reproductive unit of a fern?", "Spore"},
-    {"Which hormone helps plants grow towards light?", "Auxin"}
+        {"Plant food process?", "Photosynthesis"},
+        {"Sunlight pigment?", "Chlorophyll"},
+        {"Photosynthesis organelle?", "Chloroplast"},
+        {"Outer layer?", "Cellwall"},
+        {"Stores water?", "Vacuole"},
+        {"Water tissue?", "Xylem"},
+        {"Food tissue?", "Phloem"},
+        {"Gas exchange?", "Stomata"},
+        {"Gas taken in?", "Carbon dioxide"},
+        {"Gas released?", "Oxygen"},
+        {"Anchors plant?", "Root"},
+        {"Absorbs sunlight?", "Leaf"},
+        {"Transport structure?", "Stem"},
+        {"Seed reproduction?", "Sexual"},
+        {"No-seed reproduction?", "Asexual"},
+        {"Protects seeds?", "Fruit"},
+        {"Non-flowering plants?", "Gymnosperms"},
+        {"Flowering plants?", "Angiosperms"},
+        {"Green pigment?", "Chlorophyll"},
+        {"Water movement?", "Transpiration"},
+        {"Non-vascular plants?", "Bryophytes"}
     };
 
-    random_device rd;
-    mt19937 g(rd());
-    shuffle(quiz.begin(), quiz.end(), g);
-
-    int score = 0;
-    string answer;
-
-    for (int i = 0; i <= 20; i++) {
-        system("cls");
-        cout << "-----------------------------------------------------------------------------" << endl;
-        cout << "                           TEST CRAFT - BIOLOGY TEST                         " << endl;
-        cout << "-----------------------------------------------------------------------------" << endl;
-        cout << endl;
-
-        cout << "Question " << i << ": " << quiz[i].question << endl;
-        cout << "Answer: ";
-        getline(cin, answer);
-
-        if (answer == quiz[i].answer)
-            score += 5;
-    }
-
-    int gradeNum;
-    string gradeText;
-
-    if (score <= 40) { gradeNum = 2; gradeText = "Fail, 2."; }
-    else if (score <= 55) { gradeNum = 3; gradeText = "Below Average, 3."; }
-    else if (score <= 70) { gradeNum = 4; gradeText = "Average, 4."; }
-    else if (score <= 85) { gradeNum = 5; gradeText = "Good, 5."; }
-    else { gradeNum = 6; gradeText = "Excellent, 6."; }
-
-    system("cls");
-    cout << "Your score: " << score << endl;
-    cout << "Your grade: " << gradeText << endl;
-
-    string name;
-    int takenBefore;
-
-    cout << "Have you taken a test before?" << endl;
-    cout << "1 - Yes" << endl;
-    cout << "2 - No" << endl;
-    cout << "Choice: ";
-    cin >> takenBefore;
-    cin.ignore();
-
-    if (takenBefore == 1) {
-        ifstream file("scores.txt");
-        vector<string> names;
-        string fileName, test;
-        int fileScore, fileGrade;
-
-        while (file >> fileName >> test >> fileScore >> fileGrade) {
-            if (find(names.begin(), names.end(), fileName) == names.end())
-                names.push_back(fileName);
-        }
-        file.close();
-
-        if (names.empty()) {
-            system("cls");
-            cout << "No previous users found." << endl;
-            cout << "Enter your name: ";
-            getline(cin, name);
-        }
-        else {
-            system("cls");
-            cout << "Select your name:" << endl;
-            for (int i = 0; i < names.size(); i++)
-                cout << i + 1 << " - " << names[i] << endl;
-
-            int choice;
-            cout << "Choice: ";
-            cin >> choice;
-            cin.ignore();
-
-            name = names[choice - 1];
-        }
-
-        cout << "Welcome back, " << name << "!" << endl;
-    }
-    else {
-        system("cls");
-        cout << "Enter your name: ";
-        getline(cin, name);
-        cout << "New student acount created: " << name << endl;
-    }
-
-    ofstream out("scores.txt", ios::app);
-    out << name << " Plants test " << score << " " << gradeNum << endl;
-    out.close();
-
-    system("cls");
-    cout << "Saving: " << name << " Plants test score: " << score << " grade: " << gradeNum << endl;
-    cout << "Score saved!" << endl;
-
-    int back;
-    cout << "Press 1 to return to menu: ";
-    cin >> back;
-
-    while (true) {
-        if (back == 1) {
-            return;
-        }
-        else {
-            cout << "Invalid input. Chose again: ";
-            cin >> back;
-        }
-    }
+    runTest(quiz, "Plants");
 }
-
-
-
 
 void animalsTest() {
     vector<QA> quiz = {
-    {"What is the term for animals with a backbone?", "Vertebrates"},
-    {"What is the term for animals without a backbone?", "Invertebrates"},
-    {"Which vertebrates lay eggs?", "Oviparous"},
-    {"Which vertebrates give live birth?", "Viviparous"},
-    {"Which group of animals has feathers?", "Birds"},
-    {"Which group of animals has fur or hair?", "Mammals"},
-    {"Which animals are cold-blooded?", "Reptiles"},
-    {"Which animals can live both in water and on land?", "Amphibians"},
-    {"Which animals have scales and lay eggs in water?", "Fish"},
-    {"Which animals produce milk for their young?", "Mammals"},
-    {"Which animals have a three-chambered heart?", "Amphibians"},
-    {"Which animals have a four-chambered heart?", "Mammals"},
-    {"Which invertebrates have exoskeletons?", "Arthropods"},
-    {"Which invertebrates have soft bodies and sometimes shells?", "Mollusks"},
-    {"What is the term for animals that eat only plants?", "Herbivores"},
-    {"What is the term for animals that eat only other animals?", "Carnivores"},
-    {"What is the term for animals that eat both plants and animals?", "Omnivores"},
-    {"Which organ in fish helps with breathing?", "Gills"},
-    {"Which organ in mammals helps with breathing?", "Lungs"},
-    {"Which body system controls movement?", "Muscular"},
-    {"Which body system controls communication and coordination?", "Nervous"},
-    {"Which body system transports blood and nutrients?", "Circulatory"},
-    {"Which body system removes waste?", "Excretory"},
-    {"Which body system protects against disease?", "Immune"},
-    {"Which animals migrate to find food or breeding grounds?", "Birds"},
-    {"Which animals hibernate during winter?", "Bears"},
-    {"Which animals use camouflage to hide?", "Chameleons"},
-    {"Which animals are warm-blooded?", "Mammals"},
-    {"Which animals lay eggs with hard shells?", "Birds"},
-    {"Which animals have segmented bodies and jointed limbs?", "Arthropods"},
-    {"Which animals are known for metamorphosis?", "Insects"}
+        {"Backbone animals?", "Vertebrates"},
+        {"No backbone?", "Invertebrates"},
+        {"Egg-laying?", "Oviparous"},
+        {"Live birth?", "Viviparous"},
+        {"Feathers?", "Birds"},
+        {"Fur?", "Mammals"},
+        {"Cold-blooded?", "Reptiles"},
+        {"Land and water?", "Amphibians"},
+        {"Scales animals?", "Fish"},
+        {"Milk producers?", "Mammals"},
+        {"4-chamber heart?", "Mammals"},
+        {"Exoskeleton?", "Arthropods"},
+        {"Soft bodies?", "Mollusks"},
+        {"Plant eaters?", "Herbivores"},
+        {"Meat eaters?", "Carnivores"},
+        {"Both eaters?", "Omnivores"},
+        {"Fish breathing organ?", "Gills"},
+        {"Mammal breathing?", "Lungs"},
+        {"Movement system?", "Muscular"},
+        {"Transport system?", "Circulatory"},
+        {"Hibernate animals?", "Bears"}
     };
 
-    random_device rd;
-    mt19937 g(rd());
-    shuffle(quiz.begin(), quiz.end(), g);
-
-    int score = 0;
-    string answer;
-
-    for (int i = 0; i <= 20; i++) {
-        system("cls");
-        cout << "-----------------------------------------------------------------------------" << endl;
-        cout << "                           TEST CRAFT - BIOLOGY TEST                         " << endl;
-        cout << "-----------------------------------------------------------------------------" << endl;
-        cout << endl;
-
-        cout << "Question " << i << ": " << quiz[i].question << endl;
-        cout << "Answer: ";
-        getline(cin, answer);
-
-        if (answer == quiz[i].answer)
-            score += 5;
-    }
-
-    int gradeNum;
-    string gradeText;
-
-    if (score <= 40) { gradeNum = 2; gradeText = "Fail, 2."; }
-    else if (score <= 55) { gradeNum = 3; gradeText = "Below Average, 3."; }
-    else if (score <= 70) { gradeNum = 4; gradeText = "Average, 4."; }
-    else if (score <= 85) { gradeNum = 5; gradeText = "Good, 5."; }
-    else { gradeNum = 6; gradeText = "Excellent, 6."; }
-
-    system("cls");
-    cout << "Your score: " << score << endl;
-    cout << "Your grade: " << gradeText << endl;
-
-    string name;
-    int takenBefore;
-
-    cout << "Have you taken a test before?" << endl;
-    cout << "1 - Yes" << endl;
-    cout << "2 - No" << endl;
-    cout << "Choice: ";
-    cin >> takenBefore;
-    cin.ignore();
-
-    if (takenBefore == 1) {
-        ifstream file("scores.txt");
-        vector<string> names;
-        string fileName, test;
-        int fileScore, fileGrade;
-
-        while (file >> fileName >> test >> fileScore >> fileGrade) {
-            if (find(names.begin(), names.end(), fileName) == names.end())
-                names.push_back(fileName);
-        }
-        file.close();
-
-        if (names.empty()) {
-            system("cls");
-            cout << "No previous users found." << endl;
-            cout << "Enter your name: ";
-            getline(cin, name);
-        }
-        else {
-            system("cls");
-            cout << "Select your name:" << endl;
-            for (int i = 0; i < names.size(); i++)
-                cout << i + 1 << " - " << names[i] << endl;
-
-            int choice;
-            cout << "Choice: ";
-            cin >> choice;
-            cin.ignore();
-
-            name = names[choice - 1];
-        }
-
-        cout << "Welcome back, " << name << "!" << endl;
-    }
-    else {
-        system("cls");
-        cout << "Enter your name: ";
-        getline(cin, name);
-        cout << "New student acount created: " << name << endl;
-    }
-
-    ofstream out("scores.txt", ios::app);
-    out << name << " Animals test " << score << " " << gradeNum << endl;
-    out.close();
-
-    system("cls");
-    cout << "Saving: " << name << " Animals test score: " << score << " grade: " << gradeNum << endl;
-    cout << "Score saved!" << endl;
-
-    int back;
-    cout << "Press 1 to return to menu: ";
-    cin >> back;
-
-    while (true) {
-        if (back == 1) {
-            return;
-        }
-        else {
-            cout << "Invalid input. Chose again: ";
-            cin >> back;
-        }
-    }
+    runTest(quiz, "Animals");
 }
-
-
-
 
 void humanTest() {
     vector<QA> quiz = {
-    {"Which organ pumps blood throughout the body?", "Heart"},
-    {"Which blood cells fight infections?", "White blood cells"},
-    {"Which blood cells carry oxygen?", "Red blood cells"},
-    {"Which system controls body functions using hormones?", "Endocrine"},
-    {"Which system controls body functions using nerves?", "Nervous"},
-    {"Which organ removes waste from the blood?", "Kidneys"},
-    {"Which organ digests food?", "Stomach"},
-    {"Which organ absorbs nutrients?", "Small intestine"},
-    {"Which organ stores bile?", "Gallbladder"},
-    {"Which organ produces insulin?", "Pancreas"},
-    {"Which system defends the body against pathogens?", "Immune"},
-    {"Which system supports the body and protects organs?", "Skeletal"},
-    {"Which system moves the body?", "Muscular"},
-    {"Which organ helps you breathe?", "Lungs"},
-    {"Which system removes carbon dioxide?", "Respiratory"},
-    {"Which system transports blood and nutrients?", "Circulatory"},
-    {"Which gland produces sweat?", "Sweat glands"},
-    {"Which system includes the brain and spinal cord?", "Nervous"},
-    {"Which system produces gametes?", "Reproductive"},
-    {"Which organ stores urine?", "Bladder"},
-    {"Which system breaks down food?", "Digestive"},
-    {"Which organ produces digestive enzymes?", "Pancreas"},
-    {"Which system regulates water and salt balance?", "Excretory"},
-    {"Which organ filters toxins from the blood?", "Liver"},
-    {"Which organ stores oxygen for emergencies?", "Spleen"},
-    {"Which system senses stimuli?", "Sensory"},
-    {"Which part of the brain controls balance?", "Cerebellum"},
-    {"Which part of the brain controls thinking?", "Cerebrum"},
-    {"Which part of the brain controls involuntary actions?", "Medulla"},
-    {"Which system regulates hormones?", "Endocrine"},
-    {"Which organ connects muscles to bones?", "Tendons"}
+        {"Blood pump?", "Heart"},
+        {"Fight infections?", "White blood cells"},
+        {"Carry oxygen?", "Red blood cells"},
+        {"Hormone system?", "Endocrine"},
+        {"Nerve system?", "Nervous"},
+        {"Remove waste?", "Kidneys"},
+        {"Digest food?", "Stomach"},
+        {"Absorb nutrients?", "Small intestine"},
+        {"Produce insulin?", "Pancreas"},
+        {"Defense system?", "Immune"},
+        {"Support system?", "Skeletal"},
+        {"Movement system?", "Muscular"},
+        {"Breathing organ?", "Lungs"},
+        {"CO2 removal?", "Respiratory"},
+        {"Transport system?", "Circulatory"},
+        {"Brain system?", "Nervous"},
+        {"Produce gametes?", "Reproductive"},
+        {"Store urine?", "Bladder"},
+        {"Break down food?", "Digestive"},
+        {"Filter toxins?", "Liver"},
+        {"Thinking brain part?", "Cerebrum"}
     };
 
-    random_device rd;
-    mt19937 g(rd());
-    shuffle(quiz.begin(), quiz.end(), g);
-
-    int score = 0;
-    string answer;
-
-    for (int i = 0; i <= 20; i++) {
-        system("cls");
-        cout << "-----------------------------------------------------------------------------" << endl;
-        cout << "                           TEST CRAFT - BIOLOGY TEST                         " << endl;
-        cout << "-----------------------------------------------------------------------------" << endl;
-        cout << endl;
-
-        cout << "Question " << i << ": " << quiz[i].question << endl;
-        cout << "Answer: ";
-        getline(cin, answer);
-
-        if (answer == quiz[i].answer)
-            score += 5;
-    }
-
-    int gradeNum;
-    string gradeText;
-
-    if (score <= 40) { gradeNum = 2; gradeText = "Fail, 2."; }
-    else if (score <= 55) { gradeNum = 3; gradeText = "Below Average, 3."; }
-    else if (score <= 70) { gradeNum = 4; gradeText = "Average, 4."; }
-    else if (score <= 85) { gradeNum = 5; gradeText = "Good, 5."; }
-    else { gradeNum = 6; gradeText = "Excellent, 6."; }
-
-    system("cls");
-    cout << "Your score: " << score << endl;
-    cout << "Your grade: " << gradeText << endl;
-
-    string name;
-    int takenBefore;
-
-    cout << "Have you taken a test before?" << endl;
-    cout << "1 - Yes" << endl;
-    cout << "2 - No" << endl;
-    cout << "Choice: ";
-    cin >> takenBefore;
-    cin.ignore();
-
-    if (takenBefore == 1) {
-        ifstream file("scores.txt");
-        vector<string> names;
-        string fileName, test;
-        int fileScore, fileGrade;
-
-        while (file >> fileName >> test >> fileScore >> fileGrade) {
-            if (find(names.begin(), names.end(), fileName) == names.end())
-                names.push_back(fileName);
-        }
-        file.close();
-
-        if (names.empty()) {
-            system("cls");
-            cout << "No previous users found." << endl;
-            cout << "Enter your name: ";
-            getline(cin, name);
-        }
-        else {
-            system("cls");
-            cout << "Select your name:" << endl;
-            for (int i = 0; i < names.size(); i++)
-                cout << i + 1 << " - " << names[i] << endl;
-
-            int choice;
-            cout << "Choice: ";
-            cin >> choice;
-            cin.ignore();
-
-            name = names[choice - 1];
-        }
-
-        cout << "Welcome back, " << name << "!" << endl;
-    }
-    else {
-        system("cls");
-        cout << "Enter your name: ";
-        getline(cin, name);
-        cout << "New student acount created: " << name << endl;
-    }
-
-    ofstream out("scores.txt", ios::app);
-    out << name << " Human test " << score << " " << gradeNum << endl;
-    out.close();
-
-    system("cls");
-    cout << "Saving: " << name << " Human test score: " << score << " grade: " << gradeNum << endl;
-    cout << "Score saved!" << endl;
-
-    int back;
-    cout << "Press 1 to return to menu: ";
-    cin >> back;
-
-    while (true) {
-        if (back == 1) {
-            return;
-        }
-        else {
-            cout << "Invalid input. Chose again: ";
-            cin >> back;
-        }
-    }
+    runTest(quiz, "Human");
 }
-
 
 void geneticsTest() {
     vector<QA> quiz = {
-    {"What carries genetic information?", "DNA"},
-    {"What is the protein-building molecule?", "RNA"},
-    {"What are different versions of a gene called?", "Alleles"},
-    {"What is the observable trait of an organism?", "Phenotype"},
-    {"What is the genetic makeup of an organism?", "Genotype"},
-    {"What type of cell division produces gametes?", "Meiosis"},
-    {"What type of cell division produces identical cells?", "Mitosis"},
-    {"What are reproductive cells called?", "Gametes"},
-    {"Which chromosomes determine sex?", "Sex chromosomes"},
-    {"Which chromosomes determine other traits?", "Autosomes"},
-    {"What is the term for a dominant and recessive allele together?", "Heterozygous"},
-    {"What is the term for two identical alleles?", "Homozygous"},
-    {"Who is the father of genetics?", "Mendel"},
-    {"What organism did Mendel study?", "Pea plant"},
-    {"What is a cross between parents to study traits?", "Hybridization"},
-    {"What is the term for genes located on the same chromosome?", "Linked"},
-    {"What is a mutation?", "Change"},
-    {"What is a Punnett square used for?", "Prediction"},
-    {"What is inheritance of one trait called?", "Monohybrid"},
-    {"Inheritance of two traits?", "Dihybrid"},
-    {"What is codominance?", "Both"},
-    {"What is incomplete dominance?", "Blending"},
-    {"What is a pedigree chart used for?", "Family"},
-    {"What is a carrier?", "Heterozygous"},
-    {"What is a genotype ratio?", "Ratio"},
-    {"What is a phenotype ratio?", "Ratio"},
-    {"Which molecule is double-stranded?", "DNA"},
-    {"Which molecule is single-stranded?", "RNA"},
-    {"What is translation in genetics?", "Protein"},
-    {"What is transcription in genetics?", "RNA"}
+        {"Genetic info carrier?", "DNA"},
+        {"Protein builder?", "RNA"},
+        {"Gene versions?", "Alleles"},
+        {"Observable trait?", "Phenotype"},
+        {"Genetic makeup?", "Genotype"},
+        {"Gamete division?", "Meiosis"},
+        {"Identical division?", "Mitosis"},
+        {"Reproductive cells?", "Gametes"},
+        {"Sex chromosomes?", "Sex chromosomes"},
+        {"Other chromosomes?", "Autosomes"},
+        {"Mixed alleles?", "Heterozygous"},
+        {"Same alleles?", "Homozygous"},
+        {"Father of genetics?", "Mendel"},
+        {"Mendel organism?", "Pea plant"},
+        {"Cross study?", "Hybridization"},
+        {"Same chromosome genes?", "Linked"},
+        {"Mutation?", "Change"},
+        {"Punnett use?", "Prediction"},
+        {"One trait?", "Monohybrid"},
+        {"Two traits?", "Dihybrid"},
+        {"Codominance?", "Both"}
     };
 
-    random_device rd;
-    mt19937 g(rd());
-    shuffle(quiz.begin(), quiz.end(), g);
-
-    int score = 0;
-    string answer;
-
-    for (int i = 0; i <= 20; i++) {
-        system("cls");
-        cout << "-----------------------------------------------------------------------------" << endl;
-        cout << "                           TEST CRAFT - BIOLOGY TEST                         " << endl;
-        cout << "-----------------------------------------------------------------------------" << endl;
-        cout << endl;
-
-        cout << "Question " << i << ": " << quiz[i].question << endl;
-        cout << "Answer: ";
-        getline(cin, answer);
-
-        if (answer == quiz[i].answer)
-            score += 5;
-    }
-
-    int gradeNum;
-    string gradeText;
-
-    if (score <= 40) { gradeNum = 2; gradeText = "Fail, 2."; }
-    else if (score <= 55) { gradeNum = 3; gradeText = "Below Average, 3."; }
-    else if (score <= 70) { gradeNum = 4; gradeText = "Average, 4."; }
-    else if (score <= 85) { gradeNum = 5; gradeText = "Good, 5."; }
-    else { gradeNum = 6; gradeText = "Excellent, 6."; }
-
-    system("cls");
-    cout << "Your score: " << score << endl;
-    cout << "Your grade: " << gradeText << endl;
-
-    string name;
-    int takenBefore;
-
-    cout << "Have you taken a test before?" << endl;
-    cout << "1 - Yes" << endl;
-    cout << "2 - No" << endl;
-    cout << "Choice: ";
-    cin >> takenBefore;
-    cin.ignore();
-
-    if (takenBefore == 1) {
-        ifstream file("scores.txt");
-        vector<string> names;
-        string fileName, test;
-        int fileScore, fileGrade;
-
-        while (file >> fileName >> test >> fileScore >> fileGrade) {
-            if (find(names.begin(), names.end(), fileName) == names.end())
-                names.push_back(fileName);
-        }
-        file.close();
-
-        if (names.empty()) {
-            system("cls");
-            cout << "No previous users found." << endl;
-            cout << "Enter your name: ";
-            getline(cin, name);
-        }
-        else {
-            system("cls");
-            cout << "Select your name:" << endl;
-            for (int i = 0; i < names.size(); i++)
-                cout << i + 1 << " - " << names[i] << endl;
-
-            int choice;
-            cout << "Choice: ";
-            cin >> choice;
-            cin.ignore();
-
-            name = names[choice - 1];
-        }
-
-        cout << "Welcome back, " << name << "!" << endl;
-    }
-    else {
-        system("cls");
-        cout << "Enter your name: ";
-        getline(cin, name);
-        cout << "New student acount created: " << name << endl;
-    }
-
-    ofstream out("scores.txt", ios::app);
-    out << name << " Genetics test " << score << " " << gradeNum << endl;
-    out.close();
-
-    system("cls");
-    cout << "Saving: " << name << " Genetics test score: " << score << " grade: " << gradeNum << endl;
-    cout << "Score saved!" << endl;
-
-    int back;
-    cout << "Press 1 to return to menu: ";
-    cin >> back;
-
-    while (true) {
-        if (back == 1) {
-            return;
-        }
-        else {
-            cout << "Invalid input. Chose again: ";
-            cin >> back;
-        }
-    }
+    runTest(quiz, "Genetics");
 }

@@ -5,3 +5,13 @@ anton Animals test 0 2
 stoyan Human test 0 2
 martin Genetics test 0 2
 yanko Plants test 0 2
+2 Cell test 0 2
+petar Cell test 0 2
+petar Cell test 0 2
+petar Cell test 0 2
+petar Cell test 0 2
+petar Cell test 0 2
+petar Cell test 0 2
+petar Cell test 0 2
+petar Cell test 0 2
+petar Cell test 0 2
