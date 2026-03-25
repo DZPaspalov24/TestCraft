@@ -72,6 +72,7 @@ string getName() {
     cout << "2 - No" << endl;
     cout << "Choice: ";
     cin >> takenBefore;
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
 
     if (takenBefore == 1) {
         ifstream file("scores.txt");
@@ -109,6 +110,7 @@ string getName() {
     else {
         cout << "Enter your name: ";
         getline(cin, name);
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
         cout << "New student account created: " << name << endl;
     }
 

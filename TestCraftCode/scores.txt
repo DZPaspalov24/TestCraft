@@ -16,3 +16,6 @@ petar Cell test 0 2
 petar Cell test 0 2
 petar Cell test 0 2
 2 Cell test 0 2
+2 Cell test 0 2
+test2 Cell test 0 2
+petar Cell test 45 3
